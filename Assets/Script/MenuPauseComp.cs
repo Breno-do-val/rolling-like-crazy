@@ -49,7 +49,7 @@ public class MenuPauseComp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pausado = false;
+        //pausado = false;
         Pausado(false);
     }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Advertisements;
 
 
 /// <summary>
@@ -44,6 +45,8 @@ public class ControladorJogo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        Advertisement.Initialize("3769005");
         proxTilePos = pontoInicial;
         proxTileRot = Quaternion.identity;
 

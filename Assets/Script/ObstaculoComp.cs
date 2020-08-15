@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ObstaculoComp : MonoBehaviour
 {
@@ -17,11 +19,17 @@ public class ObstaculoComp : MonoBehaviour
     [Tooltip("Acesso para o componente BoxColdier")]
     BoxCollider bc = new BoxCollider();
 
+    private GameObject jogador;
+
     private void OnCollisionEnter(Collision collision){
         
         if(collision.gameObject.GetComponent<jogadorComportamento>())
         {
-            Destroy(collision.gameObject);
+
+            collision.gameObject.SetActive(false);
+            jogador = collision.gameObject;
+
+            //Destroy(collision.gameObject);
             Invoke("ResetaJogo", tempoEspera);
         }
     }
@@ -29,9 +37,80 @@ public class ObstaculoComp : MonoBehaviour
     
     void ResetaJogo()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        var gameOverMenu = GetGameOverMenu();
+        gameOverMenu.SetActive(true);
+
+        var botoes = gameOverMenu.transform.GetComponentsInChildren<Button>();
+
+        Button botaoContinue = null;
+
+        foreach (var botao in botoes)
+        {
+            if (botao.gameObject.name.Equals("BotaoContinuar"))
+            {
+                botaoContinue = botao;
+                    break;
+            }
+        }
+
+        if (botaoContinue)
+        {
+            StartCoroutine(ShowContinue(botaoContinue));
+
+            botaoContinue.onClick.AddListener(UnityAdControle.ShowRewardAd);
+            UnityAdControle.obstaculo = this;
+        }
+
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public IEnumerator ShowContinue(Button botaoContinue)
+    {
+        var btnText = botaoContinue.GetComponentInChildren<Text>();
+
+        while (true)
+        {
+            if (UnityAdControle.proxTempoReward.HasValue && (DateTime.Now < UnityAdControle.proxTempoReward.Value))
+            {
+                botaoContinue.interactable = false;
+
+                TimeSpan restante = UnityAdControle.proxTempoReward.Value - DateTime.Now;
+
+                var contagemRegressiva = string.Format("{0:D2}:{1:D2}", restante.Minutes, restante.Seconds);
+
+                btnText.text = contagemRegressiva;
+                yield return new WaitForSeconds(1f);
+            }
+            else
+            {
+                botaoContinue.interactable = true;
+                botaoContinue.onClick.AddListener(UnityAdControle.ShowRewardAd);
+                UnityAdControle.obstaculo = this;
+                btnText.text = "Continuar(Ad)";
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Faz o Continue do jogo
+    /// </summary>
+    public void Continue()
+    {
+        var go = GetGameOverMenu();
+        go.SetActive(false);
+        jogador.SetActive(true);
+        ObjetoTocado();
+    }
+
+    /// <summary>
+    /// Busca o MenuGameOver
+    /// </summary>
+    /// <returns>gameObject MenuGameOver</returns>
+    GameObject GetGameOverMenu()
+    {
+        return GameObject.Find("Canvas").transform.Find("MenuGameOver").gameObject;
+    }
 
     // Start is called before the first frame update
     void Start()

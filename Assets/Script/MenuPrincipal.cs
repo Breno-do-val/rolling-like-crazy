@@ -23,6 +23,12 @@ public class MenuPrincipal : MonoBehaviour
     /// <param name="nomeScene">Nome da scene que sera carregada</param>
     public void CarregaScene(string nomeScene)
     {
+
+        if (UnityAdControle.showAds)
+        {
+            UnityAdControle.ShowAd();
+        }
+
         SceneManager.LoadScene(nomeScene);
     }
 }
