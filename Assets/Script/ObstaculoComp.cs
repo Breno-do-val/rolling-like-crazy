@@ -22,8 +22,9 @@ public class ObstaculoComp : MonoBehaviour
     private GameObject jogador;
 
     private void OnCollisionEnter(Collision collision){
-        
-        if(collision.gameObject.GetComponent<jogadorComportamento>())
+
+
+        if (collision.gameObject.GetComponent<jogadorComportamento>())
         {
 
             collision.gameObject.SetActive(false);
@@ -118,6 +119,7 @@ public class ObstaculoComp : MonoBehaviour
         // Acesso aos componentes
         mr = GetComponent<MeshRenderer>();
         bc = GetComponent<BoxCollider>();
+
     }
 
     // Update is called once per frame
@@ -155,12 +157,15 @@ public class ObstaculoComp : MonoBehaviour
             var particulas = Instantiate(explosao, transform.position, Quaternion.identity);
             // Destroi as particulas
             Destroy(particulas, 1.0f);
+            
         }
         
         // Desabilitando o MeshRendered e o BoxColider
         // Garante que nada irá influenciar nesse obstáculo novamente
         mr.enabled = false;
         bc.enabled = false;
+
+        explosao.GetComponent<AudioSource>().Play();
 
         // Destroi este obstaculo
         Destroy(this.gameObject);

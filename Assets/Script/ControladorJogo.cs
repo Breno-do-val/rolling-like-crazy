@@ -18,7 +18,6 @@ public class ControladorJogo : MonoBehaviour
     [Tooltip("Ponto para se deslocar o TileBasicoInicial")]
     public Vector3 pontoInicial = new Vector3(0, 0, -5);
 
-
     [Tooltip("Quantdade de Tiles iniciais")]
     [Range(1, 20)]
     public int numSpawnIni;
@@ -53,7 +52,8 @@ public class ControladorJogo : MonoBehaviour
         for(int i = 0; i < numSpawnIni; i++)
         {
             SpawnProxTile( i >= numTilesSemOBS);
-        }
+        }       
+
     }
 
 
