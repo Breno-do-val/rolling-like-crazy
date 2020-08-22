@@ -23,6 +23,7 @@ public class MenuPrincipal : MonoBehaviour
     /// <param name="nomeScene">Nome da scene que sera carregada</param>
     public void CarregaScene(string nomeScene)
     {
+        ObstaculoComp.velocidadeRolamento = 0.1f;
 
         if (UnityAdControle.showAds)
         {

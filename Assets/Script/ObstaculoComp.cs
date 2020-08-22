@@ -10,6 +10,8 @@ public class ObstaculoComp : MonoBehaviour
     [Tooltip("Particle system da explosao")]
     public GameObject  explosao;
 
+    public static float velocidadeRolamento = 0.1f;
+
     [Tooltip("Quanto tempo antes de reiniciar o jogo")]
     public float tempoEspera = 2.0f;
     
@@ -123,16 +125,20 @@ public class ObstaculoComp : MonoBehaviour
     }
 
     // Update is called once per frame
+    [Obsolete]
     void Update()
     {
         // Detectando se houve clique com o botão (opcao 0) ou toque na tela
         // if(Input.GetMouseButton(0)) {           
-              
+
         //     // Verifica se esse toque atingiu algum objeto 
         //     TocarObjetos(Input.mousePosition);                   
         // }          
-              
-        // Verifica se esse toque atingiu algum objeto 
+
+        if (MenuPauseComp.pausado || GetGameOverMenu().active)
+            return;
+
+        // Verifica se esse toque atingiu algum objeto
         TocarObjetos(Input.mousePosition);                   
        
     }
@@ -151,7 +157,9 @@ public class ObstaculoComp : MonoBehaviour
     }
 
     public void ObjetoTocado(){
-        
+
+        velocidadeRolamento += 0.1f;
+
         if(explosao != null){
             // Cria o efeito de explosao
             var particulas = Instantiate(explosao, transform.position, Quaternion.identity);
